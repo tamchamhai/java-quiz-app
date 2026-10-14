@@ -80,6 +80,27 @@ export const MODULE_CATEGORIES: ModuleCategory[] = [
             difficulty: 'easy',
           },
           {
+            id: 'mod2-s1-q6',
+            milestoneId: 'module-02',
+            moduleId: 'module-02',
+            title: 'Tác dụng và lợi ích chính của việc sử dụng từ khóa `var` (Local Variable Type Inference) trong Java là gì?',
+            codeSnippet: `// Cách truyền thống (trước Java 10):
+Map<String, List<TicketOrder>> orderMap = new HashMap<String, List<TicketOrder>>();
+
+// Cách hiện đại (từ Java 10+):
+var orderMap = new HashMap<String, List<TicketOrder>>();`,
+            options: [
+              { id: 'opt-a', text: 'Giúp chương trình chạy nhanh hơn và giảm tiêu thụ bộ nhớ RAM vì JVM không cần cấp phát trước kiểu dữ liệu tĩnh.', isCorrect: false },
+              { id: 'opt-b', text: 'Giảm thiểu mã thừa lặp lại dài dòng (Boilerplate Code), tăng tính trực quan và khả năng đọc hiểu (Readability), giúp lập trình viên tập trung vào tên biến có ý nghĩa trong khi vẫn đảm bảo 100% tính an toàn kiểu tĩnh (Static Type Safety) tại thời điểm biên dịch.', isCorrect: true },
+              { id: 'opt-c', text: 'Cho phép biến có thể tự do gán lại giá trị thuộc các kiểu dữ liệu khác nhau trong suốt quá trình chạy (Dynamic Typing).', isCorrect: false },
+              { id: 'opt-d', text: 'Tự động kiểm tra và triệt tiêu hoàn toàn ngoại lệ NullPointerException khi thao tác với biến.', isCorrect: false },
+            ],
+            explanation: 'Tác dụng cốt lõi của `var` (theo tài liệu hướng dẫn JEP 286 của OpenJDK):\n1. Loại bỏ việc lặp lại tên kiểu dữ liệu cồng kềnh (Boilerplate) ở cả 2 vế của phép gán.\n2. Tăng tính dễ đọc (Readability): chuyển sự chú ý của người đọc code vào tên biến có ý nghĩa (Meaningful Variable Names) thay vì kiểu dữ liệu lặp đi lặp lại.\n3. Bảo toàn 100% Type Safety: Không phải kiểu động (Dynamic typing), không suy giảm hiệu năng lúc Runtime vì mã bytecode được javac sinh ra hoàn toàn giống hệt như khi khai báo kiểu tường minh.',
+            referencePath: '01-java-core/00-java-project-config.md',
+            tags: ['Java 10', 'var keyword', 'Best Practices', 'Readability', 'Boilerplate'],
+            difficulty: 'easy',
+          },
+          {
             id: 'mod2-s1-q2',
             milestoneId: 'module-02',
             moduleId: 'module-02',
