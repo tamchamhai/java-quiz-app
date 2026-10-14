@@ -67,7 +67,28 @@ export function useQuizProgress() {
     if (selectedCategory === 'milestone') {
       return MILESTONES_DATA.find((m) => m.id === activeId) || MILESTONES_DATA[0];
     } else {
-      return MODULE_CATEGORIES.find((m) => m.id === activeId) || MODULE_CATEGORIES[0];
+      const directMatch = MODULE_CATEGORIES.find((m) => m.id === activeId);
+      if (directMatch) return directMatch;
+
+      for (const mod of MODULE_CATEGORIES) {
+        if (mod.subTopics) {
+          const sub = mod.subTopics.find((s) => s.id === activeId);
+          if (sub) {
+            return {
+              id: sub.id,
+              code: mod.code,
+              name: sub.title,
+              title: `${mod.code}.${sub.orderNumber} ${sub.title}`,
+              iconName: mod.iconName,
+              description: sub.description || `${mod.name} - ${sub.title} (${sub.readDuration})`,
+              folderPath: mod.folderPath,
+              questions: sub.questions,
+            };
+          }
+        }
+      }
+
+      return MODULE_CATEGORIES[0];
     }
   }, [selectedCategory, activeId]);
 

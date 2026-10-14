@@ -33,6 +33,16 @@ export interface Milestone {
   questions: QuizQuestion[];
 }
 
+export interface SubTopic {
+  id: string;
+  moduleId: string;
+  orderNumber: number;
+  title: string;
+  readDuration: string; // e.g. "Đọc 13p"
+  description?: string;
+  questions: QuizQuestion[];
+}
+
 export interface ModuleCategory {
   id: string;
   code: string;
@@ -42,6 +52,7 @@ export interface ModuleCategory {
   description: string;
   folderPath: string;
   questions: QuizQuestion[];
+  subTopics?: SubTopic[];
 }
 
 export type QuizMode = 'practice' | 'exam';

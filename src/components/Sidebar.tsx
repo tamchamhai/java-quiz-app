@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   Layers, 
   Terminal, 
   ChevronRight,
+  ChevronDown,
   Database,
   Lock,
   Send,
@@ -14,7 +15,7 @@ import {
 } from 'lucide-react';
 import { MILESTONES_DATA } from '../data/milestones-data';
 import { MODULE_CATEGORIES } from '../data/modules-data';
-import type { Milestone, ModuleCategory } from '../types/quiz';
+import type { Milestone, ModuleCategory, SubTopic } from '../types/quiz';
 
 interface SidebarProps {
   selectedCategory: 'milestone' | 'module';
@@ -55,6 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   getCategoryStats,
   overallStats,
 }) => {
+  const [expandedModuleIds, setExpandedModuleIds] = useState<string[]>(['module-02']);
   return (
     <aside className="w-80 shrink-0 bg-slate-900 border-r border-slate-800 flex flex-col h-screen select-none">
       {/* Brand Header */}
@@ -214,37 +216,158 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <div className="space-y-1 mt-1">
               {MODULE_CATEGORIES.map((mod: ModuleCategory) => {
+                const hasSubTopics = Boolean(mod.subTopics && mod.subTopics.length > 0);
+                const hasActiveSub = Boolean(mod.subTopics?.some((s) => s.id === activeId));
+                const isCurrentActive = activeId === mod.id || hasActiveSub;
+                const isExpanded = expandedModuleIds.includes(mod.id) || hasActiveSub;
                 const stats = getCategoryStats(mod.questions);
-                const isActive = activeId === mod.id;
+
+                const handleModuleClick = () => {
+                  if (hasSubTopics) {
+                    setExpandedModuleIds((prev) =>
+                      prev.includes(mod.id)
+                        ? prev.filter((id) => id !== mod.id)
+                        : [...prev, mod.id]
+                    );
+                    if (!hasActiveSub) {
+                      setActiveId(mod.subTopics![0].id);
+                    }
+                  } else {
+                    setActiveId(mod.id);
+                  }
+                };
 
                 return (
-                  <button
-                    key={mod.id}
-                    onClick={() => setActiveId(mod.id)}
-                    className={`w-full text-left p-2.5 rounded-xl transition-all flex items-center gap-2.5 group border ${
-                      isActive
-                        ? 'bg-indigo-950/70 border-indigo-500/40 text-white'
-                        : 'border-transparent text-slate-300 hover:bg-slate-800/60'
-                    }`}
-                  >
-                    <span
-                      className={`w-6 h-6 rounded-md font-mono text-[11px] font-bold flex items-center justify-center shrink-0 ${
-                        isActive
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-slate-800 text-slate-400'
+                  <div key={mod.id} className="rounded-xl overflow-hidden">
+                    <button
+                      onClick={handleModuleClick}
+                      className={`w-full text-left p-3 transition-all flex items-center gap-3 group border rounded-xl ${
+                        isCurrentActive
+                          ? 'bg-slate-800/90 border-slate-700 text-white shadow-md shadow-black/40'
+                          : 'border-transparent text-slate-300 hover:bg-slate-800/50 hover:text-white'
                       }`}
                     >
-                      {mod.code}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold truncate text-slate-200">
-                        {mod.name}
-                      </p>
-                      <p className="text-[10px] text-slate-400 truncate">
-                        {stats.answered}/{stats.total} câu
-                      </p>
-                    </div>
-                  </button>
+                      {/* Left Chevron down/right icon */}
+                      {hasSubTopics ? (
+                        <ChevronDown
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                            isExpanded ? 'text-slate-300' : '-rotate-90 text-slate-500'
+                          }`}
+                        />
+                      ) : (
+                        <ChevronRight
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                            isCurrentActive
+                              ? 'text-indigo-400 rotate-90'
+                              : 'text-slate-500 group-hover:text-slate-300'
+                          }`}
+                        />
+                      )}
+
+                      {/* Middle: MODULE Code (upper) + Module Name (lower bold) */}
+                      <div className="flex-1 min-w-0 pr-1">
+                        <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5 font-mono">
+                          MODULE {mod.code}
+                        </div>
+                        <div
+                          className={`text-sm font-bold tracking-tight truncate leading-snug transition-colors ${
+                            isCurrentActive ? 'text-slate-100 font-extrabold' : 'text-slate-100 group-hover:text-white'
+                          }`}
+                        >
+                          {mod.name}
+                        </div>
+                      </div>
+
+                      {/* Right: Circular progress / status ring '○' */}
+                      <div className="shrink-0 flex items-center justify-center">
+                        {stats.isCompleted ? (
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        ) : stats.answered > 0 ? (
+                          <div className="relative w-5 h-5 flex items-center justify-center">
+                            <svg className="w-5 h-5 -rotate-90" viewBox="0 0 24 24">
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="9"
+                                className="stroke-slate-800 fill-none stroke-[2.5]"
+                              />
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="9"
+                                className="stroke-teal-500 fill-none stroke-[2.5] transition-all duration-300"
+                                strokeDasharray={2 * Math.PI * 9}
+                                strokeDashoffset={
+                                  2 * Math.PI * 9 * (1 - (stats.total > 0 ? stats.answered / stats.total : 0))
+                                }
+                                strokeLinecap="round"
+                              />
+                            </svg>
+                            <span className="absolute text-[8px] font-mono text-teal-300 font-bold">
+                              {stats.answered}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="w-5 h-5 rounded-full border-2 border-slate-700/90 group-hover:border-slate-500 transition-colors" />
+                        )}
+                      </div>
+                    </button>
+
+                    {/* Sub-topics list matching screenshot */}
+                    {hasSubTopics && isExpanded && (
+                      <div className="mt-0.5 space-y-0.5 border-t border-slate-800/40">
+                        {mod.subTopics!.map((sub: SubTopic) => {
+                          const isSubActive = activeId === sub.id;
+                          const subStats = getCategoryStats(sub.questions);
+
+                          return (
+                            <button
+                              key={sub.id}
+                              onClick={() => setActiveId(sub.id)}
+                              className={`w-full text-left py-2.5 px-3 transition-all flex items-start gap-3 group relative ${
+                                isSubActive
+                                  ? 'bg-[#0c2622] border-r-2 border-[#14b8a6]'
+                                  : 'hover:bg-slate-800/40'
+                              }`}
+                            >
+                              {/* Left Circle indicator */}
+                              <div className="shrink-0 mt-0.5">
+                                {subStats.isCompleted ? (
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                ) : isSubActive ? (
+                                  <div className="w-4 h-4 rounded-full border-2 border-[#2dd4bf] flex items-center justify-center">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#2dd4bf]" />
+                                  </div>
+                                ) : (
+                                  <div className="w-4 h-4 rounded-full border-2 border-slate-700 group-hover:border-slate-500 transition-colors" />
+                                )}
+                              </div>
+
+                              {/* Title and Duration */}
+                              <div className="flex-1 min-w-0">
+                                <p
+                                  className={`text-[13px] leading-snug line-clamp-2 ${
+                                    isSubActive
+                                      ? 'text-[#2dd4bf] font-medium'
+                                      : 'text-slate-300 group-hover:text-slate-100'
+                                  }`}
+                                >
+                                  {sub.title}
+                                </p>
+                                <span
+                                  className={`text-[11px] block mt-1 ${
+                                    isSubActive ? 'text-teal-400/80 font-medium' : 'text-slate-500'
+                                  }`}
+                                >
+                                  {sub.readDuration}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
