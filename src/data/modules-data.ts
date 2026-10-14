@@ -538,6 +538,29 @@ for (int i = 1; i <= 10_000; i++) {
             tags: ['Java 15', 'Text Block', 'Multi-line String', 'Clean Code'],
             difficulty: 'easy',
           },
+          {
+            id: 'mod2-s7-q4',
+            milestoneId: 'module-02',
+            moduleId: 'module-02',
+            title: 'Khi xử lý thông tin nhạy cảm như mật khẩu (Password) từ người dùng nhập vào, tại sao chuẩn bảo mật của Java khuyến nghị nên dùng `char[]` thay vì `String`?',
+            codeSnippet: `// Phương án 1:
+String passwordStr = readPassword();
+
+// Phương án 2 (Khuyến nghị bảo mật):
+char[] passwordChars = readPasswordAsChars();
+// Sau khi xác thực xong với database:
+Arrays.fill(passwordChars, ' '); // Xóa sạch dữ liệu khỏi RAM`,
+            options: [
+              { id: 'opt-a', text: 'Vì `char[]` tốn ít dung lượng RAM hơn `String` gấp 2 lần, giúp tối ưu hiệu năng cho hệ thống có hàng triệu user.', isCorrect: false },
+              { id: 'opt-b', text: 'Vì `String` trong Java là bất biến (Immutable), giá trị mật khẩu sẽ nằm lưu lại trên Heap một cách không kiểm soát cho tới khi GC dọn rác; trong khi `char[]` cho phép dùng `Arrays.fill(...)` để chủ động ghi đè/xóa sạch khỏi RAM ngay khi dùng xong, ngăn ngừa nguy cơ rò rỉ mật khẩu qua Heap dump hay Memory scan.', isCorrect: true },
+              { id: 'opt-c', text: 'Vì kiểu `String` không hỗ trợ các ký tự Unicode và ký tự đặc biệt thường có trong mật khẩu mạnh.', isCorrect: false },
+              { id: 'opt-d', text: 'Vì mảng `char[]` tự động mã hóa băm (Hash) thành chuỗi bcrypt trước khi gửi qua mạng.', isCorrect: false },
+            ],
+            explanation: 'Lý do chuyên sâu từ kiến trúc bộ nhớ JVM và chuẩn bảo mật Java:\n1. Tính bất biến của String (Immutability): Khi tạo một String chứa password, đối tượng sẽ nằm trên Heap (hoặc String Constant Pool) cho tới khi GC quét dọn mà lập trình viên hoàn toàn không thể kiểm soát thời điểm này. Nếu kẻ tấn công khai thác được Heap dump hoặc Memory scan, mật khẩu dạng văn bản thô (Plaintext) sẽ bị lộ.\n2. Khả năng chủ động xóa bộ nhớ của char[]: char[] là mảng có thể thay đổi (mutable). Ngay sau khi xác thực hoặc băm mật khẩu, lập trình viên có thể gọi `Arrays.fill(password, \' \')` để ghi đè ngay lập tức, triệt tiêu thời gian mật khẩu tồn tại trong RAM.\n3. Đặc tả Java chính thức đồng thuận: Các thư viện bảo mật chuẩn của Java như `JPasswordField.getPassword()` (Swing) và `PasswordCallback.getPassword()` (JAAS / Java Security) đều trả về `char[]` chứ không bao giờ trả về `String`.',
+            referencePath: '01-java-core/01-oop-class-object.md',
+            tags: ['Security', 'String Immutability', 'char[]', 'Memory Dump', 'Best Practices'],
+            difficulty: 'medium',
+          },
         ],
       },
       {
