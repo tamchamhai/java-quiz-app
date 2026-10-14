@@ -1,0 +1,227 @@
+import { Component, Output, EventEmitter, inject, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IconComponent } from './icon.component';
+import { QuizProgressService } from '../services/quiz-progress.service';
+import type { Milestone, ModuleCategory } from '../../types/quiz';
+
+@Component({
+  selector: 'app-header',
+  standalone: true,
+  imports: [CommonModule, FormsModule, IconComponent],
+  template: `
+    <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-20 px-6 py-4">
+      <!-- Top row: Title and Mode Switcher -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 text-[11px] font-bold rounded-md bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              {{ isMilestone ? asMilestone.shortTitle : asModule.code }}
+            </span>
+            @if (isMilestone) {
+              <span class="text-xs text-amber-400 font-medium flex items-center gap-1">
+                <app-icon name="flame" className="w-3.5 h-3.5" />
+                {{ asMilestone.learningRatio }}
+              </span>
+            }
+          </div>
+          <h2 class="text-xl font-bold text-white tracking-tight">
+            {{ currentCategory.title }}
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5 line-clamp-1">
+            {{ currentCategory.description }}
+          </p>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <!-- Mode Switcher -->
+          <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center gap-1">
+            <button
+              (click)="quizService.setMode('practice')"
+              [class]="quizService.mode() === 'practice'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+            >
+              <app-icon name="sparkles" className="w-3.5 h-3.5" />
+              <span>Luyện tập</span>
+            </button>
+
+            <button
+              (click)="startExam()"
+              [class]="quizService.mode() === 'exam'
+                ? 'bg-amber-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+            >
+              <app-icon name="timer" className="w-3.5 h-3.5" />
+              <span>Thi thử</span>
+            </button>
+          </div>
+
+          <!-- Exam Timer & Submit buttons -->
+          @if (quizService.mode() === 'exam') {
+            <div class="flex items-center gap-2">
+              <div
+                [class]="quizService.examTimeRemaining() < 180
+                  ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 animate-pulse'
+                  : 'bg-slate-800/80 text-amber-400 border-slate-700'"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono font-bold text-sm"
+              >
+                <app-icon name="timer" className="w-4 h-4" />
+                <span>{{ formattedTime() }}</span>
+              </div>
+
+              @if (!quizService.examSubmitted()) {
+                <button
+                  (click)="quizService.submitExam()"
+                  class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-950/40 transition-all cursor-pointer"
+                >
+                  <app-icon name="send" className="w-3.5 h-3.5" />
+                  <span>Nộp bài</span>
+                </button>
+              } @else {
+                <button
+                  (click)="quizService.startExam()"
+                  class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                >
+                  <app-icon name="rotate-ccw" className="w-3.5 h-3.5" />
+                  <span>Làm lại đề này</span>
+                </button>
+              }
+            </div>
+          } @else {
+            <button
+              (click)="quizService.resetCurrentProgress()"
+              title="Xóa kết quả và làm lại chặng này"
+              class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700/60 transition-all cursor-pointer"
+            >
+              <app-icon name="rotate-ccw" className="w-4 h-4" />
+            </button>
+          }
+
+          <!-- Theory button -->
+          <button
+            (click)="openTheory.emit()"
+            class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-indigo-300 hover:text-indigo-200 border border-indigo-500/30 font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <app-icon name="book-open" className="w-3.5 h-3.5" />
+            <span class="hidden sm:inline">Giáo trình liên quan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom row: Search & Filter Chips -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-800/60">
+        <!-- Filter chips -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button
+            (click)="setStatusFilter('all')"
+            [class]="quizService.filter().status === 'all'
+              ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40'
+              : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'"
+            class="px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer"
+          >
+            Tất cả ({{ totalQuestions() }})
+          </button>
+
+          <button
+            (click)="setStatusFilter('unanswered')"
+            [class]="quizService.filter().status === 'unanswered'
+              ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40'
+              : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'"
+            class="px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer"
+          >
+            Chưa làm ({{ totalQuestions() - answeredCount() }})
+          </button>
+
+          <button
+            (click)="setStatusFilter('bookmarked')"
+            [class]="quizService.filter().status === 'bookmarked'
+              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+              : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'"
+            class="px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 transition-all cursor-pointer"
+          >
+            <app-icon name="bookmark" className="w-3 h-3" />
+            <span>Đã ghim sao</span>
+          </button>
+
+          @if (quizService.mode() === 'practice') {
+            <button
+              (click)="setStatusFilter('incorrect')"
+              [class]="quizService.filter().status === 'incorrect'
+                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-transparent'"
+              class="px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer"
+            >
+              Cần ôn lại (Sai)
+            </button>
+          }
+        </div>
+
+        <!-- Search input -->
+        <div class="relative w-full sm:w-64">
+          <app-icon name="search" className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Tìm kiếm câu hỏi, từ khóa..."
+            [ngModel]="quizService.filter().searchQuery"
+            (ngModelChange)="onSearchChange($event)"
+            class="w-full pl-8 pr-3 py-1.5 bg-slate-950/70 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+          />
+        </div>
+      </div>
+    </header>
+  `
+})
+export class HeaderComponent {
+  readonly quizService = inject(QuizProgressService);
+  @Output() openTheory = new EventEmitter<void>();
+
+  get currentCategory(): Milestone | ModuleCategory {
+    return this.quizService.currentCategoryData();
+  }
+
+  get isMilestone(): boolean {
+    return 'learningRatio' in this.currentCategory;
+  }
+
+  get asMilestone(): Milestone {
+    return this.currentCategory as Milestone;
+  }
+
+  get asModule(): ModuleCategory {
+    return this.currentCategory as ModuleCategory;
+  }
+
+  readonly totalQuestions = computed(() => this.quizService.rawQuestions().length);
+
+  readonly answeredCount = computed(() => {
+    const raw = this.quizService.rawQuestions();
+    const answers = this.quizService.answers();
+    return raw.filter((q) => answers[q.id] && answers[q.id].length > 0).length;
+  });
+
+  readonly formattedTime = computed(() => {
+    const seconds = this.quizService.examTimeRemaining();
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  });
+
+  startExam() {
+    if (this.quizService.mode() !== 'exam') {
+      this.quizService.startExam();
+    }
+  }
+
+  setStatusFilter(status: 'all' | 'unanswered' | 'bookmarked' | 'incorrect') {
+    this.quizService.setFilter((prev) => ({ ...prev, status }));
+  }
+
+  onSearchChange(searchQuery: string) {
+    this.quizService.setFilter((prev) => ({ ...prev, searchQuery }));
+  }
+}
+

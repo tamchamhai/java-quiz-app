@@ -1,57 +1,94 @@
-# 🎯 Java Ticket Station Quiz App
+# Java Ticket Station Quiz App (Angular SSR)
 
-Ứng dụng web làm bài trắc nghiệm kiến thức Java Backend thực chiến dựa trên giáo án và tài liệu tại [`C:\__project_fullstack\ticket-station-app\java-knownledge`](../java-knownledge).
+A modern, high-performance quiz application designed for mastering Java Core, OOP, Multi-threading, Memory Management, and Backend Architecture for the Ticket Station project.
 
----
-
-## 🌟 Tính Năng Nổi Bật
-
-1. **Menu Bên Trái (Left Navigation):**
-   - **Lộ trình 6 Chặng Thực Chiến (Ticket Station Spine Project):**
-     - 📍 **Chặng 1:** Khởi Tạo Dự Án, Cấu Trúc Chuẩn & Quản Lý Schema (Flyway)
-     - 📍 **Chặng 2:** Thiết Kế RESTful API, DTO Projections & Triệt Tiêu N+1 Query
-     - 📍 **Chặng 3:** Kiểm Thử Tự Động Mockito & Bảo Mật Spring Security 6 JWT
-     - 📍 **Chặng 4:** Nghiệp Vụ Đặt Vé, Concurrency & Tranh Chấp Ghế (Redis Lock)
-     - 📍 **Chặng 5:** Kiến Trúc Hướng Sự Kiện Kafka & Transactional Outbox
-     - 📍 **Chặng 6:** Tính Bất Biến (Idempotency), Chịu Lỗi Resilience4j & Docker
-   - **12 Chuyên Đề Roadmap Bổ Trợ:** Học sâu từng khía cạnh kỹ thuật (Java Core, Spring Core, JPA, Security, Caching, Messaging, Microservices, Observability,...).
-   - **Thanh đo tiến độ & Tỷ lệ đúng (%):** Tự động thống kê số câu đã làm, số câu đúng và tỷ lệ hoàn thành.
-
-2. **2 Chế Độ Làm Bài Linh Hoạt:**
-   - ⚡ **Chế Độ Luyện Tập (Practice Mode):**
-     - Chọn đáp án và nhận phản hồi tức thì (Xanh/Đỏ).
-     - Hộp giải thích chuyên sâu (**Deep Explanation**) phân tích rõ vì sao đáp án đúng, tại sao các phương án khác sai hoặc là bẫy thường gặp khi phỏng vấn/production.
-     - Trích dẫn chính xác đường dẫn file bài học trong `java-knownledge/roadmap/...` để người học mở ra đọc thêm.
-   - ⏱️ **Chế Độ Thi Thử (Exam Mode):**
-     - Đồng hồ đếm ngược tính giờ làm bài.
-     - Ẩn đáp án trong lúc làm bài, chấm điểm và xếp hạng (Junior / Mid / Senior Ready) sau khi bấm "Nộp bài".
-     - Hiệu ứng pháo hoa chúc mừng khi đạt kết quả cao (>= 80%).
-
-3. **Công Cụ Hỗ Trợ:**
-   - Ghim sao (Bookmark) các câu hỏi khó để ôn lại.
-   - Bộ lọc thông minh: "Tất cả", "Chưa làm", "Đã đánh dấu (★)", "Làm sai (Cần ôn lại)".
-   - Tìm kiếm nhanh theo từ khóa, công nghệ (`Flyway`, `N+1`, `Kafka`, `Redisson`, `Idempotency`,...).
-   - Nút "Giáo trình liên quan" xem nhanh tóm tắt phương pháp "Đọc 20% - Phá 30% - Xây 50%".
-   - Lưu tiến độ học tập tự động vào `localStorage` (không mất dữ liệu khi reload trình duyệt).
+Built with **Angular 21**, **Server-Side Rendering (SSR)** via `@angular/ssr` and Express, **Angular Signals**, and **Tailwind CSS**.
 
 ---
 
-## 🚀 Hướng Dẫn Chạy Ứng Dụng
+## Features
 
-Di chuyển vào thư mục ứng dụng và khởi chạy dev server:
+- **Server-Side Rendering (SSR) & Static Site Generation (SSG)**: Fast initial page load with pre-rendered HTML and client hydration.
+- **Angular Signals Architecture**: Modern, granular reactive state management using Angular `signal` and `computed`.
+- **6 Milestones & 12 Specialized Modules**: Complete roadmap covering Java Core syntax, Collections, Concurrency, Virtual Threads, Spring Boot, PostgreSQL, and distributed caching.
+- **Practice Mode & Exam Mode**:
+  - *Practice Mode*: Real-time feedback, detailed explanations, syllabus links, and bookmarks.
+  - *Exam Mode*: Timed quiz sessions, score calculations, rank classifications, and celebratory confetti.
+- **Offline & Local Storage Persistence**: Seamless progress tracking with SSR-safe browser storage hydration.
+- **Tailwind CSS & Responsive Layout**: Clean dark-theme interface with mobile navigation drawer.
 
-```powershell
-cd c:\__project_fullstack\ticket-station-app\java-quiz-app
-npm run dev
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js `^20.0.0` or `^22.0.0` or `^24.0.0`
+- npm `^10.0.0` or `^11.0.0`
+
+### Installation
+
+```bash
+npm install
 ```
 
-Truy cập trên trình duyệt tại địa chỉ: `http://localhost:5173`
+### Development Server
+
+Run the development server on `http://localhost:4200`:
+
+```bash
+npm start
+# or
+npx ng serve
+```
+
+### Production Build (SSR)
+
+Build both browser bundles and server bundles:
+
+```bash
+npm run build
+```
+
+Artifacts are compiled into `dist/java-quiz-app/`.
+
+### Run SSR Server
+
+Start the Node.js Express SSR server on `http://localhost:4000`:
+
+```bash
+npm run serve
+# or
+npm run serve:ssr
+```
 
 ---
 
-## 🛠️ Công Nghệ Sử Dụng
+## Project Structure
 
-- **Frontend:** React 19 + TypeScript + Vite 8
-- **Styling:** Tailwind CSS v4 (Dark Theme hiện đại, tương thích giao diện IDE)
-- **Icons:** Lucide React
-- **Hiệu ứng:** Canvas Confetti
+```text
+src/
+├── app/
+│   ├── components/
+│   │   ├── header.component.ts         # Header with mode switcher, timer, filter & search
+│   │   ├── icon.component.ts           # Standalone SVG icon system
+│   │   ├── quiz-card.component.ts      # Interactive question card with code snippets & feedback
+│   │   ├── quiz-results.component.ts   # Scorecard, accuracy analytics & rank classification
+│   │   ├── sidebar.component.ts        # Roadmap milestones & module subtopic accordions
+│   │   └── theory-modal.component.ts   # Reference curriculum & theory modal dialog
+│   ├── services/
+│   │   └── quiz-progress.service.ts    # Central Angular Signal state & SSR-safe persistence
+│   ├── app.component.ts                # Main application layout shell
+│   ├── app.config.ts                   # Client application providers & hydration
+│   └── app.config.server.ts            # Server-side rendering providers
+├── data/
+│   ├── milestones-data.ts              # 6 Milestones syllabus quiz questions
+│   └── modules-data.ts                 # 12 Modules detailed questions & subtopic taxonomy
+├── types/
+│   └── quiz.ts                         # Core TypeScript interfaces & types
+├── index.html                          # Root HTML template
+├── main.ts                             # Client bootstrapping entry point
+├── main.server.ts                      # Server-side bootstrapping entry point
+├── server.ts                           # Express engine server for SSR
+└── styles.css                          # Global styles & Tailwind CSS imports
+```
