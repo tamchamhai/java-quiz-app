@@ -299,6 +299,28 @@ if (currentUserId == requestUserId) {
             tags: ['Production Bug', 'Spring Boot', 'LongCache', 'Best Practices'],
             difficulty: 'medium',
           },
+          {
+            id: 'mod2-s3-q4',
+            milestoneId: 'module-02',
+            moduleId: 'module-02',
+            title: 'Đoạn mã sau đây in ra kết quả gì trên console và cơ chế truyền tham số của Java đối với kiểu tham chiếu (Reference Type) giải thích điều này ra sao?',
+            codeSnippet: `String s = "hi";
+changeIt(s);
+System.out.println(s);
+
+// Định nghĩa phương thức:
+// void changeIt(String x) { x = "bye"; }`,
+            options: [
+              { id: 'opt-a', text: 'In ra `bye` vì `String` là kiểu tham chiếu (Reference Type) nên Java truyền tham chiếu (Pass-by-reference), làm thay đổi giá trị của biến `s` ban đầu.', isCorrect: false },
+              { id: 'opt-b', text: 'In ra `hi` vì Java luôn luôn là Pass-by-value (truyền tham trị) 100%; giá trị được truyền vào ở đây là bản copy của địa chỉ tham chiếu (copy of reference). Phép gán `x = "bye"` chỉ đổi biến cục bộ `x` trỏ sang đối tượng String mới mà không làm thay đổi biến `s` của caller.', isCorrect: true },
+              { id: 'opt-c', text: 'In ra `null` vì chuỗi ban đầu bị Garbage Collector dọn dẹp ngay khi thoát khỏi hàm `changeIt`.', isCorrect: false },
+              { id: 'opt-d', text: 'Báo lỗi biên dịch Compile-time Error vì không thể truyền tham số `String` vào một phương thức trả về `void`.', isCorrect: false },
+            ],
+            explanation: 'Trong Java, ngôn ngữ LUÔN LUÔN hoạt động theo cơ chế pass-by-value 100% (truyền tham trị), hoàn toàn không có pass-by-reference như trong C++ hay C# (ref/out):\n1. Với kiểu tham chiếu (Object Reference), "giá trị" được truyền vào hàm chính là bản copy của địa chỉ tham chiếu (copy of reference).\n2. Khi gọi `changeIt(s)`, biến cục bộ `x` (nằm trên Stack của hàm) nhận bản sao địa chỉ và tạm thời cùng trỏ tới chuỗi `"hi"` với `s`.\n3. Lệnh `x = "bye"` chỉ gán lại địa chỉ của biến cục bộ `x` sang đối tượng chuỗi mới trong String Pool/Heap, biến `s` của caller vẫn giữ nguyên địa chỉ trỏ tới `"hi"`.\n4. Muốn caller thấy giá trị mới, hàm bắt buộc phải `return` giá trị mới về và caller thực hiện gán lại: `s = changeIt(s);`.',
+            referencePath: '01-java-core/01-oop-class-object.md',
+            tags: ['Pass-by-value', 'Reference Types', 'String', 'Memory Model', 'Method Parameters'],
+            difficulty: 'medium',
+          },
         ],
       },
       {
