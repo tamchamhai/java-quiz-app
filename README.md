@@ -34,7 +34,7 @@ npm install
 
 ### Development Server
 
-Run the development server on `http://localhost:4200`:
+Run the development server on `http://localhost:5173`:
 
 ```bash
 npm start
@@ -54,7 +54,7 @@ Artifacts are compiled into `dist/java-quiz-app/`.
 
 ### Run SSR Server
 
-Start the Node.js Express SSR server on `http://localhost:4000`:
+Start the Node.js Express SSR server on `http://localhost:5173`:
 
 ```bash
 npm run serve
