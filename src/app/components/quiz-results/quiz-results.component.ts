@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from './icon.component';
-import type { QuizQuestion } from '../../types/quiz';
+import { IconComponent } from '../icon/icon.component';
+import type { QuizQuestion } from '../../../types/quiz';
 
 @Component({
   selector: 'app-quiz-results',

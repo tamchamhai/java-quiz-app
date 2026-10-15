@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from './icon.component';
-import { QuizProgressService } from '../services/quiz-progress.service';
-import { MILESTONES_DATA } from '../../data/milestones-data';
-import { MODULE_CATEGORIES } from '../../data/modules-data';
-import type { ModuleCategory, QuizQuestion } from '../../types/quiz';
+import { IconComponent } from '../icon/icon.component';
+import { QuizProgressService } from '../../services/quiz-progress.service';
+import { MILESTONES_DATA } from '../../../data/milestones-data';
+import { MODULE_CATEGORIES } from '../../../data/modules-data';
+import type { ModuleCategory, QuizQuestion } from '../../../types/quiz';
 
 @Component({
   selector: 'app-sidebar',

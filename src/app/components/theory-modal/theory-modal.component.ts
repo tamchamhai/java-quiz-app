@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from './icon.component';
-import type { Milestone, ModuleCategory } from '../../types/quiz';
+import { IconComponent } from '../icon/icon.component';
+import type { Milestone, ModuleCategory } from '../../../types/quiz';
 
 @Component({
   selector: 'app-theory-modal',

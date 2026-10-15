@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { IconComponent } from './icon.component';
-import type { QuizQuestion, QuizMode } from '../../types/quiz';
+import { IconComponent } from '../icon/icon.component';
+import type { QuizQuestion, QuizMode } from '../../../types/quiz';
 
 @Component({
   selector: 'app-quiz-card',

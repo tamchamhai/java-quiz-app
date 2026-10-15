@@ -1,9 +1,9 @@
 import { Component, Output, EventEmitter, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IconComponent } from './icon.component';
-import { QuizProgressService } from '../services/quiz-progress.service';
-import type { Milestone, ModuleCategory } from '../../types/quiz';
+import { IconComponent } from '../icon/icon.component';
+import { QuizProgressService } from '../../services/quiz-progress.service';
+import type { Milestone, ModuleCategory } from '../../../types/quiz';
 
 @Component({
   selector: 'app-header',

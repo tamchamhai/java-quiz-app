@@ -1,11 +1,11 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from './components/sidebar.component';
-import { HeaderComponent } from './components/header.component';
-import { QuizCardComponent } from './components/quiz-card.component';
-import { QuizResultsComponent } from './components/quiz-results.component';
-import { TheoryModalComponent } from './components/theory-modal.component';
-import { IconComponent } from './components/icon.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { HeaderComponent } from './components/header/header.component';
+import { QuizCardComponent } from './components/quiz-card/quiz-card.component';
+import { QuizResultsComponent } from './components/quiz-results/quiz-results.component';
+import { TheoryModalComponent } from './components/theory-modal/theory-modal.component';
+import { IconComponent } from './components/icon/icon.component';
 import { QuizProgressService } from './services/quiz-progress.service';
 import { MILESTONES_DATA } from '../data/milestones-data';
 

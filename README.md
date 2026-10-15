@@ -70,12 +70,30 @@ npm run serve:ssr
 src/
 ├── app/
 │   ├── components/
-│   │   ├── header.component.{ts,html,css}         # Header with mode switcher, timer, filter & search
-│   │   ├── icon.component.{ts,html,css}           # Standalone SVG icon system
-│   │   ├── quiz-card.component.{ts,html,css}      # Interactive question card with code snippets & feedback
-│   │   ├── quiz-results.component.{ts,html,css}   # Scorecard, accuracy analytics & rank classification
-│   │   ├── sidebar.component.{ts,html,css}        # Roadmap milestones & module subtopic accordions
-│   │   └── theory-modal.component.{ts,html,css}   # Reference curriculum & theory modal dialog
+│   │   ├── header/
+│   │   │   ├── header.component.ts
+│   │   │   ├── header.component.html
+│   │   │   └── header.component.css
+│   │   ├── icon/
+│   │   │   ├── icon.component.ts
+│   │   │   ├── icon.component.html
+│   │   │   └── icon.component.css
+│   │   ├── quiz-card/
+│   │   │   ├── quiz-card.component.ts
+│   │   │   ├── quiz-card.component.html
+│   │   │   └── quiz-card.component.css
+│   │   ├── quiz-results/
+│   │   │   ├── quiz-results.component.ts
+│   │   │   ├── quiz-results.component.html
+│   │   │   └── quiz-results.component.css
+│   │   ├── sidebar/
+│   │   │   ├── sidebar.component.ts
+│   │   │   ├── sidebar.component.html
+│   │   │   └── sidebar.component.css
+│   │   └── theory-modal/
+│   │       ├── theory-modal.component.ts
+│   │       ├── theory-modal.component.html
+│   │       └── theory-modal.component.css
 │   ├── services/
 │   │   └── quiz-progress.service.ts               # Central Angular Signal state & SSR-safe persistence
 │   ├── app.component.{ts,html,css}                # Main application layout shell
