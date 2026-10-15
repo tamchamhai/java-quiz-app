@@ -70,17 +70,17 @@ npm run serve:ssr
 src/
 ├── app/
 │   ├── components/
-│   │   ├── header.component.ts         # Header with mode switcher, timer, filter & search
-│   │   ├── icon.component.ts           # Standalone SVG icon system
-│   │   ├── quiz-card.component.ts      # Interactive question card with code snippets & feedback
-│   │   ├── quiz-results.component.ts   # Scorecard, accuracy analytics & rank classification
-│   │   ├── sidebar.component.ts        # Roadmap milestones & module subtopic accordions
-│   │   └── theory-modal.component.ts   # Reference curriculum & theory modal dialog
+│   │   ├── header.component.{ts,html,css}         # Header with mode switcher, timer, filter & search
+│   │   ├── icon.component.{ts,html,css}           # Standalone SVG icon system
+│   │   ├── quiz-card.component.{ts,html,css}      # Interactive question card with code snippets & feedback
+│   │   ├── quiz-results.component.{ts,html,css}   # Scorecard, accuracy analytics & rank classification
+│   │   ├── sidebar.component.{ts,html,css}        # Roadmap milestones & module subtopic accordions
+│   │   └── theory-modal.component.{ts,html,css}   # Reference curriculum & theory modal dialog
 │   ├── services/
-│   │   └── quiz-progress.service.ts    # Central Angular Signal state & SSR-safe persistence
-│   ├── app.component.ts                # Main application layout shell
-│   ├── app.config.ts                   # Client application providers & hydration
-│   └── app.config.server.ts            # Server-side rendering providers
+│   │   └── quiz-progress.service.ts               # Central Angular Signal state & SSR-safe persistence
+│   ├── app.component.{ts,html,css}                # Main application layout shell
+│   ├── app.config.ts                              # Client application providers & hydration
+│   └── app.config.server.ts                       # Server-side rendering providers
 ├── data/
 │   ├── milestones-data.ts              # 6 Milestones syllabus quiz questions
 │   └── modules-data.ts                 # 12 Modules detailed questions & subtopic taxonomy
